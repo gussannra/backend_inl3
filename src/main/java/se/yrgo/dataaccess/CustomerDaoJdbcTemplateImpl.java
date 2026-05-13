@@ -1,18 +1,20 @@
 package se.yrgo.dataaccess;
 
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 import se.yrgo.domain.Call;
 import se.yrgo.domain.Customer;
-import se.yrgo.services.customers.CustomerNotFoundException;
 
-import javax.xml.crypto.Data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+@Repository
 public class CustomerDaoJdbcTemplateImpl implements CustomerDao {
     private JdbcTemplate jdbcTemplate;
 
@@ -30,10 +32,12 @@ public class CustomerDaoJdbcTemplateImpl implements CustomerDao {
     private static final String ADD_CALL_SQL = "insert into CALL_TBL(TIME_DATE, NOTES, CUSTOMER_ID) values (?, ?, ?)";
     private static final String GET_CALLS_BY_CUSTOMER_ID_SQL = "select* from CALL_TBL where CUSTOMER_ID=?";
 
+    @Autowired
     public CustomerDaoJdbcTemplateImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @PostConstruct
     public void createTables() {
         try {
             this.jdbcTemplate.update(CREATE_CUSTOMER_TBL_SQL);
